@@ -1,20 +1,16 @@
 locals {
+  ethereum_explorer_container_name          = "ethereum-explorer"
 
-  explorer_port                    = 80
-  explorer_container_name          = "explorer"
-
-
-
-  explorer_common_container_definitions = [
-    local.explorer_container_definition
+  ethereum_explorer_common_container_definitions = [
+    local.ethereum_explorer_container_definition
   ]
 
-  explorer_container_definitions = [
-    jsonencode(local.explorer_common_container_definitions),
+  ethereum_explorer_container_definitions = [
+    jsonencode(local.ethereum_explorer_common_container_definitions),
   ]
 
-  explorer_container_definition = {
-    name      = local.explorer_container_name
+  ethereum_explorer_container_definition = {
+    name      = local.ethereum_explorer_container_name
     image     = var.ethereum_lite_explorer_docker_image
     essential = "true"
 
@@ -46,9 +42,9 @@ locals {
 
     portMappings = [
       {
-        "hostPort" : local.explorer_port,
+        "hostPort" : var.ethereum_explorer_port,
         "protocol" : "tcp",
-        "containerPort" : local.explorer_port
+        "containerPort" : var.ethereum_explorer_port
       },
     ]
 
@@ -57,7 +53,7 @@ locals {
     environment = [
       {
         "name" : "APP_NODE_URL",
-        "value" : "http://${aws_lb.nlb_ethereum.dns_name}:${local.go_ethereum_rpc_port}"
+        "value" : "http://${aws_lb.nlb_ethereum.dns_name}:${var.go_ethereum_rpc_port}"
       }
     ]
 

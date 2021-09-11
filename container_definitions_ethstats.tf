@@ -1,6 +1,4 @@
 locals {
-
-  ethstats_port                    = 3000
   ethstats_container_name          = "ethstats"
 
   ethstats_common_container_definitions = [
@@ -44,9 +42,9 @@ locals {
 
     portMappings = [
       {
-        "hostPort" : local.ethstats_port,
+        "hostPort" : var.ethstats_port,
         "protocol" : "tcp",
-        "containerPort" : local.ethstats_port
+        "containerPort" : var.ethstats_port
       },
     ]
 
@@ -66,8 +64,6 @@ locals {
     cpu = 0
   }
 }
-
-
 
 resource "random_id" "ethstat_secret" {
   byte_length = 16

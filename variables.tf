@@ -3,22 +3,58 @@ variable "region" {
   description = "The target AWS region"
 }
 
+variable "vpc_id" {
+  type        = string
+  description = "The target AWS VPC"
+}
+
+variable "subnet_ids" {
+  type        = list
+  description = "The AWS subnets for ECS tasks deployments and Load Balancer provisioning"
+
+}
+
 variable "network_name" {
   type        = string
-  description = "The network name to distinguish the deployment from others"
+  description = "The network name to distinguish this deployment from others"
 }
 
 variable "number_of_nodes" {
   type        = number
-  description = "Number of Ethereum client nodes"
+  description = "Number of Ethereum nodes"
   default     = 2
 }
 
 variable "initial_eth_allocations" {
   type        = map
-  description = "The map of wallet address and amount to allocate the initial ETH"
+  description = "The map of wallet addresses and amounts in ETH to allocate the initial funds"
   default     = {}
 }
+
+variable "go_ethereum_p2p_port" {
+  type        = number
+  description = "The port number to expose the ethereum rpc endpoint"
+  default     = 21000
+}
+
+variable "go_ethereum_rpc_port" {
+  type        = number
+  description = "The port number for ethereum p2p communication"
+  default     = 22000
+}
+
+variable "ethstats_port" {
+  type        = number
+  description = "The port number to expose the ethstats endpoint"
+  default     = 3000
+}
+
+variable "ethereum_explorer_port" {
+  type        = number
+  description = "The port number to expose the ethereum explorer endpoint"
+  default     = 80
+}
+
 
 variable "go_ethereum_docker_image" {
   type        = string
@@ -43,14 +79,3 @@ variable "ethereum_lite_explorer_docker_image" {
   description = "The Ethereum Lite Explorer docker image"
   default     = "alethio/ethereum-lite-explorer:v1.0.0-beta.10"
 } 
-
-variable "subnet_ids" {
-  type        = list
-  description = "The AWS subnets"
-
-}
-
-variable "vpc_id" {
-  type        = string
-  description = "The target AWS VPC"
-}

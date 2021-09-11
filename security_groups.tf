@@ -4,15 +4,15 @@ resource "aws_security_group" "go_ethereum" {
   vpc_id      = var.vpc_id
 
   ingress {
-      from_port = local.go_ethereum_p2p_port
+      from_port = var.go_ethereum_p2p_port
       protocol  = "tcp"
-      to_port   = local.go_ethereum_rpc_port
+      to_port   = var.go_ethereum_rpc_port
 
       cidr_blocks = [
         "0.0.0.0/0",
       ]
 
-      description = "Allow all"
+      description = "Allow traffic for geth p2p and rpc"
   }
   
 
@@ -25,7 +25,7 @@ resource "aws_security_group" "go_ethereum" {
       "0.0.0.0/0",
     ]
 
-    description = "Allow geth rpc"
+    description = "Allow traffic for geth"
   }
 
   tags = "${merge(local.common_tags, tomap({"Name" = format("ethereum-sg-%s", var.network_name)}))}"
@@ -37,9 +37,9 @@ resource "aws_security_group" "ethstats" {
   vpc_id      = var.vpc_id
 
   ingress {
-      from_port = local.ethstats_port
+      from_port = var.ethstats_port
       protocol  = "tcp"
-      to_port   = local.ethstats_port
+      to_port   = var.ethstats_port
 
       cidr_blocks = [
         "0.0.0.0/0",
@@ -64,15 +64,15 @@ resource "aws_security_group" "ethstats" {
   tags = "${merge(local.common_tags, tomap({"Name" = format("ethereum-sg-%s", var.network_name)}))}"
 }
 
-resource "aws_security_group" "ethereum_lite_exlorer" {
+resource "aws_security_group" "ethereum_exlorer" {
   name        = "go-ethereum-sg-explorer-${var.network_name}"
   description = "Security group used in Ethereum network ${var.network_name}"
   vpc_id      = var.vpc_id
 
   ingress {
-      from_port = local.explorer_port
+      from_port = var.ethereum_explorer_port
       protocol  = "tcp"
-      to_port   = local.explorer_port
+      to_port   = var.ethereum_explorer_port
 
       cidr_blocks = [
         "0.0.0.0/0",

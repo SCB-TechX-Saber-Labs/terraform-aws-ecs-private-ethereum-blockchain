@@ -35,14 +35,14 @@ resource "aws_ecs_service" "ethstats" {
   load_balancer {
     target_group_arn = aws_lb_target_group.nlb_tg_ethstats.arn
     container_name   = local.ethstats_container_name
-    container_port   = local.ethstats_port
+    container_port   = var.ethstats_port
   }
 
 }
 
 resource "aws_ecs_task_definition" "ethereum_explorer" {
   family                   = "ethereum-explorer-${var.network_name}"
-  container_definitions    = replace(element(compact(local.explorer_container_definitions), 0), "/\"(true|false|[0-9]+)\"/", "$1")
+  container_definitions    = replace(element(compact(local.ethereum_explorer_container_definitions), 0), "/\"(true|false|[0-9]+)\"/", "$1")
   requires_compatibilities = ["FARGATE"]
   cpu                      = "4096"
   memory                   = "8192"
@@ -62,13 +62,13 @@ resource "aws_ecs_service" "ethereum_explorer" {
   network_configuration {
     subnets          = var.subnet_ids
     assign_public_ip = false
-    security_groups  = [aws_security_group.ethereum_lite_exlorer.id]
+    security_groups  = [aws_security_group.ethereum_exlorer.id]
   }
 
   load_balancer {
     target_group_arn = aws_lb_target_group.nlb_tg_ethereum_explorer.arn
-    container_name   = local.explorer_container_name
-    container_port   = local.explorer_port
+    container_name   = local.ethereum_explorer_container_name
+    container_port   = var.ethereum_explorer_port
   }
 
 }
@@ -104,7 +104,7 @@ resource "aws_ecs_service" "go_ethereum" {
   load_balancer {
     target_group_arn = aws_lb_target_group.nlb_tg_go_ethereum.arn
     container_name   = local.go_ethereum_container_name
-    container_port   = local.go_ethereum_rpc_port
+    container_port   = var.go_ethereum_rpc_port
   }
 }
 

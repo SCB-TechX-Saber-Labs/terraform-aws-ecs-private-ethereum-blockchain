@@ -57,7 +57,7 @@ locals {
         "mkdir -p ${local.data_dir}/geth",
         "echo \"\" > ${local.password_file}",
         "echo \"Creating ${local.static_nodes_file} and ${local.permissioned_nodes_file}\"",
-        "all=\"\"; for f in `ls ${local.node_ids_folder}`; do nodeid=$(cat ${local.node_ids_folder}/$f); ip=$(cat ${local.hosts_folder}/$f); all=\"$all,\\\"enode://$nodeid@$ip:${local.go_ethereum_p2p_port}?discport=0\\\"\"; done; all=$${all:1}",
+        "all=\"\"; for f in `ls ${local.node_ids_folder}`; do nodeid=$(cat ${local.node_ids_folder}/$f); ip=$(cat ${local.hosts_folder}/$f); all=\"$all,\\\"enode://$nodeid@$ip:${var.go_ethereum_p2p_port}?discport=0\\\"\"; done; all=$${all:1}",
         "echo \"[$all]\" > ${local.static_nodes_file}",
         "echo \"[$all]\" > ${local.permissioned_nodes_file}",
         "echo Permissioned Nodes: $(cat ${local.permissioned_nodes_file})",
@@ -71,10 +71,10 @@ locals {
         "--rpc",
         "--rpcaddr 0.0.0.0",
         "--rpcapi admin,eth,debug,miner,net,shh,txpool,personal,web3,clique",
-        "--rpcport ${local.go_ethereum_rpc_port}",
+        "--rpcport ${var.go_ethereum_rpc_port}",
         "--rpcvhosts=*",
         "--rpccorsdomain=*",
-        "--port ${local.go_ethereum_p2p_port}",
+        "--port ${var.go_ethereum_p2p_port}",
         "--unlock 0",
         "--password ${local.password_file}",
         "--nodiscover",
@@ -86,7 +86,7 @@ locals {
         "--syncmode full",
         "--mine",
         "--miner.threads 1",
-        "--ethstats \"$IDENTITY:${random_id.ethstat_secret.hex}@${aws_lb.nlb_ethereum.dns_name}:${local.ethstats_port}\"",
+        "--ethstats \"$IDENTITY:${random_id.ethstat_secret.hex}@${aws_lb.nlb_ethereum.dns_name}:${var.ethstats_port}\"",
     ])    
 
     go_ethereum_run_commands = concat(
@@ -140,9 +140,9 @@ locals {
 
         portMappings = [
             {
-                "hostPort" : local.go_ethereum_rpc_port,
+                "hostPort" : var.go_ethereum_rpc_port,
                 "protocol" : "tcp",
-                "containerPort" : local.go_ethereum_rpc_port
+                "containerPort" : var.go_ethereum_rpc_port
             }
         ]
 
