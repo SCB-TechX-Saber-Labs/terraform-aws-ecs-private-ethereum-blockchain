@@ -1,6 +1,6 @@
 resource "aws_lb" "nlb_ethereum" {
   name               = "nlb-${local.ecs_cluster_name}"
-  internal           = true
+  internal           = !var.is_public_subnets
   load_balancer_type = "network"
   subnets            = var.subnet_ids
 

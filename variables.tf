@@ -14,6 +14,11 @@ variable "subnet_ids" {
 
 }
 
+variable "is_public_subnets" {
+  type        = bool
+  description = "Indicate that if subnets supplied in subnet_ids are public subnets"
+}
+
 variable "network_name" {
   type        = string
   description = "The network name to distinguish this deployment from others"

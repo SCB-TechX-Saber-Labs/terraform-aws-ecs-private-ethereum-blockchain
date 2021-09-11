@@ -28,7 +28,7 @@ resource "aws_ecs_service" "ethstats" {
 
   network_configuration {
     subnets          = var.subnet_ids
-    assign_public_ip = false
+    assign_public_ip = var.is_public_subnets
     security_groups  = [aws_security_group.ethstats.id]
   }
 
@@ -61,7 +61,7 @@ resource "aws_ecs_service" "ethereum_explorer" {
 
   network_configuration {
     subnets          = var.subnet_ids
-    assign_public_ip = false
+    assign_public_ip = var.is_public_subnets
     security_groups  = [aws_security_group.ethereum_exlorer.id]
   }
 
@@ -97,7 +97,7 @@ resource "aws_ecs_service" "go_ethereum" {
 
   network_configuration {
     subnets          = var.subnet_ids
-    assign_public_ip = false
+    assign_public_ip = var.is_public_subnets
     security_groups  = [aws_security_group.go_ethereum.id]
   }
 
