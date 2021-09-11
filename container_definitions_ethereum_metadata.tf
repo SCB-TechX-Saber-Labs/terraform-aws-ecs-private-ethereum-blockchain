@@ -22,7 +22,6 @@ locals {
         "mkdir -p ${local.hosts_folder}",
         "mkdir -p ${local.node_ids_folder}",
         "mkdir -p ${local.accounts_folder}",
-        "mkdir -p ${local.ethstats_host_folder}",
         "aws s3 cp ${local.node_id_file} s3://${local.s3_revision_folder}/nodeids/${local.normalized_host_ip}",
         "aws s3 cp ${local.host_ip_file} s3://${local.s3_revision_folder}/hosts/${local.normalized_host_ip}",
         "aws s3 cp ${local.account_address_file} s3://${local.s3_revision_folder}/accounts/${local.normalized_host_ip}",
@@ -42,11 +41,9 @@ locals {
 
         "echo \"All nodes have registered their IDs\"",
 
-        // Gather ethstats IP
-        "count=0; while [ $count -lt 1 ]; do count=$(ls ${local.ethstats_host_folder} | grep ^ip | wc -l); aws s3 cp --recursive s3://${local.ethereum_bucket}/ethstats_host ${local.ethstats_host_folder} > /dev/null 2>&1 | echo \"Wait for ethstats container to report its IP...\"; sleep 1; done",
-
         // Prepare Genesis file
         "alloc=\"\"; for f in `ls ${local.accounts_folder}`; do address=$(cat ${local.accounts_folder}/$f); alloc=\"$alloc,\\\"$address\\\": { \"balance\": \"\\\"1000000000000000000000000000\\\"\"}\"; done",
+        "alloc=\"$alloc,\\\"0x22955665b90ebA0a0E45cA61d8ddBdAFa2a92BAd\\\": { \"balance\": \"\\\"1000000000000000000000000000\\\"\"}\"",
         "alloc=\"{$${alloc:1}}\"",
         "extraData=\"\\\"0x0000000000000000000000000000000000000000000000000000000000000000\\\"\"",
         "all=\"0x0000000000000000000000000000000000000000000000000000000000000000\"; for f in `ls ${local.accounts_folder}`; do address=$(cat ${local.accounts_folder}/$f); all=\"$all$(echo $address)\"; done;all=\"$all$(echo 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)\";",

@@ -63,8 +63,6 @@ locals {
         "echo Permissioned Nodes: $(cat ${local.permissioned_nodes_file})",
         "geth --datadir ${local.data_dir} init ${local.genesis_file}",
         "export IDENTITY=$(cat ${local.service_file} | awk -F: '{print $2}')",
-        "all=\"\"; for f in `ls ${local.ethstats_host_folder}`; do ip=$(cat ${local.ethstats_host_folder}/$f); all=\"$all,$ip\"; done; all=$${all:1}",
-        "export ETHSTATS_HOST=$all",
         ""
     ]
 
@@ -87,7 +85,7 @@ locals {
         "--syncmode full",
         "--mine",
         "--miner.threads 1",
-        "--ethstats \"$IDENTITY:${random_id.ethstat_secret.hex}@$ETHSTATS_HOST:${local.ethstats_port}\"",
+        "--ethstats \"$IDENTITY:${random_id.ethstat_secret.hex}@${aws_lb.nlb_ethereum.dns_name}:${local.ethstats_port}\"",
     ])    
 
     go_ethereum_run_commands = concat(
