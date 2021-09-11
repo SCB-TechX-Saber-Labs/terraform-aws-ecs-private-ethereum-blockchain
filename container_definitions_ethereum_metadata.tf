@@ -43,7 +43,7 @@ locals {
 
         // Prepare Genesis file
         "alloc=\"\"; for f in `ls ${local.accounts_folder}`; do address=$(cat ${local.accounts_folder}/$f); alloc=\"$alloc,\\\"$address\\\": { \"balance\": \"\\\"1000000000000000000000000000\\\"\"}\"; done",
-        "alloc=\"$alloc,\\\"0x22955665b90ebA0a0E45cA61d8ddBdAFa2a92BAd\\\": { \"balance\": \"\\\"1000000000000000000000000000\\\"\"}\"",
+        "if [ ${length(var.initial_eth_allocations)} -gt 0 ]; then alloc=\"$alloc,${replace(replace(replace(replace(jsonencode(var.initial_eth_allocations), "{", "\\\""), "}", "000000000000000000\\\"}"), ",", "000000000000000000\\\"},\\\""), ":", "\\\" : { \\\"balance\\\": \\\"")}\"; fi",
         "alloc=\"{$${alloc:1}}\"",
         "extraData=\"\\\"0x0000000000000000000000000000000000000000000000000000000000000000\\\"\"",
         "all=\"0x0000000000000000000000000000000000000000000000000000000000000000\"; for f in `ls ${local.accounts_folder}`; do address=$(cat ${local.accounts_folder}/$f); all=\"$all$(echo $address)\"; done;all=\"$all$(echo 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)\";",

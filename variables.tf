@@ -14,6 +14,12 @@ variable "number_of_nodes" {
   default     = 2
 }
 
+variable "initial_eth_allocations" {
+  type        = map
+  description = "The map of wallet address and amount to allocate the initial ETH"
+  default     = {}
+}
+
 variable "go_ethereum_docker_image" {
   type        = string
   description = "The Go Ethereum docker image to run Ethereum client node"
