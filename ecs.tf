@@ -8,21 +8,6 @@ resource "aws_ecs_cluster" "ethereum" {
   name = local.ecs_cluster_name
 }
 
-resource "aws_ecs_task_definition" "go_ethereum" {
-  family                   = "go-ethereum-${var.network_name}"
-  container_definitions    = replace(element(compact(local.container_definitions), 0), "/\"(true|false|[0-9]+)\"/", "$1")
-  requires_compatibilities = ["FARGATE"]
-  cpu                      = "4096"
-  memory                   = "8192"
-  network_mode             = "awsvpc"
-  task_role_arn            = aws_iam_role.ecs_task.arn
-  execution_role_arn       = aws_iam_role.ecs_task.arn
-
-  volume {
-    name = local.shared_volume_name
-  }
-}
-
 resource "aws_ecs_task_definition" "ethstats" {
   family                   = "ethstats-${var.network_name}"
   container_definitions    = replace(element(compact(local.ethstats_container_definitions), 0), "/\"(true|false|[0-9]+)\"/", "$1")
@@ -32,10 +17,6 @@ resource "aws_ecs_task_definition" "ethstats" {
   network_mode             = "awsvpc"
   task_role_arn            = aws_iam_role.ecs_task.arn
   execution_role_arn       = aws_iam_role.ecs_task.arn
-
-  volume {
-    name = local.shared_volume_name
-  }
 }
 
 resource "aws_ecs_service" "ethstats" {
@@ -57,6 +38,53 @@ resource "aws_ecs_service" "ethstats" {
     container_port   = local.ethstats_port
   }
 
+}
+
+resource "aws_ecs_task_definition" "ethereum_explorer" {
+  family                   = "ethereum-explorer-${var.network_name}"
+  container_definitions    = replace(element(compact(local.explorer_container_definitions), 0), "/\"(true|false|[0-9]+)\"/", "$1")
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "4096"
+  memory                   = "8192"
+  network_mode             = "awsvpc"
+  task_role_arn            = aws_iam_role.ecs_task.arn
+  execution_role_arn       = aws_iam_role.ecs_task.arn
+
+}
+
+resource "aws_ecs_service" "ethereum_explorer" {
+  name            = "ethereum-explorer-${var.network_name}"
+  cluster         = aws_ecs_cluster.ethereum.id
+  task_definition = aws_ecs_task_definition.ethereum_explorer.arn
+  launch_type     = "FARGATE"
+  desired_count   = "1"
+
+  network_configuration {
+    subnets          = var.subnet_ids
+    assign_public_ip = false
+    security_groups  = [aws_security_group.ethereum_lite_exlorer.id]
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.nlb_tg_ethereum_explorer.arn
+    container_name   = local.explorer_container_name
+    container_port   = local.explorer_port
+  }
+
+}
+resource "aws_ecs_task_definition" "go_ethereum" {
+  family                   = "go-ethereum-${var.network_name}"
+  container_definitions    = replace(element(compact(local.container_definitions), 0), "/\"(true|false|[0-9]+)\"/", "$1")
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "4096"
+  memory                   = "8192"
+  network_mode             = "awsvpc"
+  task_role_arn            = aws_iam_role.ecs_task.arn
+  execution_role_arn       = aws_iam_role.ecs_task.arn
+
+  volume {
+    name = local.shared_volume_name
+  }
 }
 
 resource "aws_ecs_service" "go_ethereum" {

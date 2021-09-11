@@ -64,3 +64,36 @@ resource "aws_security_group" "ethstats" {
   tags = "${merge(local.common_tags, tomap({"Name" = format("ethereum-sg-%s", var.network_name)}))}"
 }
 
+resource "aws_security_group" "ethereum_lite_exlorer" {
+  name        = "go-ethereum-sg-explorer-${var.network_name}"
+  description = "Security group used in Ethereum network ${var.network_name}"
+  vpc_id      = var.vpc_id
+
+  ingress {
+      from_port = local.explorer_port
+      protocol  = "tcp"
+      to_port   = local.explorer_port
+
+      cidr_blocks = [
+        "0.0.0.0/0",
+      ]
+
+      description = "Allow Ethereum Lite Explorer"
+  }
+  
+
+  egress {
+    from_port = 0
+    protocol  = "-1"
+    to_port   = 0
+
+    cidr_blocks = [
+      "0.0.0.0/0",
+    ]
+
+    description = "Allow all"
+  }
+
+  tags = "${merge(local.common_tags, tomap({"Name" = format("ethereum-sg-%s", var.network_name)}))}"
+}
+

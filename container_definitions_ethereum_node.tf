@@ -73,6 +73,7 @@ locals {
         "--rpcapi admin,eth,debug,miner,net,shh,txpool,personal,web3,clique",
         "--rpcport ${local.go_ethereum_rpc_port}",
         "--rpcvhosts=*",
+        "--rpccorsdomain=*",
         "--port ${local.go_ethereum_p2p_port}",
         "--unlock 0",
         "--password ${local.password_file}",
@@ -145,11 +146,7 @@ locals {
             }
         ]
 
-        volumesFrom = [
-            # {
-            #     sourceContainer = "${local.metadata_bootstrap_container_name}"
-            # }
-        ]
+        volumesFrom = []
 
         environment = []
 

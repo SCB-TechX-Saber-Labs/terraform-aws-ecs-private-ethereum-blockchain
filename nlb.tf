@@ -9,7 +9,7 @@ resource "aws_lb" "nlb_ethereum" {
 }
 
 resource "aws_lb_target_group" "nlb_tg_go_ethereum" {
-  name     = "${local.ecs_cluster_name}"
+  name     = local.ecs_cluster_name
   port     = local.go_ethereum_rpc_port
   target_type = "ip"
   protocol = "TCP"
@@ -43,5 +43,24 @@ resource "aws_lb_listener" "nlb_listener_ethstats" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.nlb_tg_ethstats.arn
+  }
+}
+
+resource "aws_lb_target_group" "nlb_tg_ethereum_explorer" {
+  name     = "explorer-${local.ecs_cluster_name}"
+  port     = local.explorer_port
+  target_type = "ip"
+  protocol = "TCP"
+  vpc_id   = var.vpc_id
+}
+
+resource "aws_lb_listener" "nlb_listener_ethereum_explorer" {
+  load_balancer_arn = aws_lb.nlb_ethereum.arn
+  port              = local.explorer_port
+  protocol          = "TCP"
+  
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.nlb_tg_ethereum_explorer.arn
   }
 }

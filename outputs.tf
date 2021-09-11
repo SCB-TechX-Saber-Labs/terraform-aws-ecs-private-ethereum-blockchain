@@ -15,6 +15,10 @@ output "nlb_dns" {
   value = aws_lb.nlb_ethereum.dns_name
 }
 
+output "ethereum_lite_explorer_endpoint" {
+  value = "http://${aws_lb.nlb_ethereum.dns_name}:${local.explorer_port}"
+}
+
 output "ethstats_endpoint" {
   value = "http://${aws_lb.nlb_ethereum.dns_name}:${local.ethstats_port}"
 }

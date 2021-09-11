@@ -32,6 +32,12 @@ variable "ethstats_docker_image" {
   default     = "puppeth/ethstats:latest"
 } 
 
+variable "ethereum_lite_explorer_docker_image" { 
+  type        = string
+  description = "The Ethereum Lite Explorer docker image"
+  default     = "alethio/ethereum-lite-explorer:v1.0.0-beta.10"
+} 
+
 variable "subnet_ids" {
   type        = list
   description = "The AWS subnets"
