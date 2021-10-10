@@ -9,7 +9,7 @@ variable "vpc_id" {
 }
 
 variable "subnet_ids" {
-  type        = list
+  type        = list(any)
   description = "The AWS subnets for ECS tasks deployments and Load Balancer provisioning"
 
 }
@@ -31,7 +31,7 @@ variable "number_of_nodes" {
 }
 
 variable "initial_eth_allocations" {
-  type        = map
+  type        = map(any)
   description = "The map of wallet addresses and amounts in ETH to allocate the initial funds"
   default     = {}
 }
@@ -65,21 +65,21 @@ variable "go_ethereum_docker_image" {
   type        = string
   description = "The Go Ethereum docker image to run Ethereum client node"
   default     = "ethereum/client-go:alltools-v1.10.8"
-}     
+}
 
 variable "aws_cli_docker_image" {
   type        = string
   description = "The AWS CLI image to work with AWS services"
   default     = "amazon/aws-cli"
-} 
+}
 
 variable "ethstats_docker_image" {
   type        = string
   description = "The Ethereum ethstats monitoring tool docker image"
   default     = "puppeth/ethstats:latest"
-} 
+}
 
-variable "ethereum_lite_explorer_docker_image" { 
+variable "ethereum_lite_explorer_docker_image" {
   type        = string
   description = "The Ethereum Lite Explorer docker image"
   default     = "alethio/ethereum-lite-explorer:v1.0.0-beta.10"

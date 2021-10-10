@@ -63,11 +63,11 @@ resource "aws_iam_policy" "ecs_task" {
   name        = "ethereum-ecs-task-policy-${var.network_name}"
   path        = "/"
   description = "This policy allows task to access S3 bucket"
-  policy      = "${data.aws_iam_policy_document.ecs_task.json}"
+  policy      = data.aws_iam_policy_document.ecs_task.json
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_s3" {
- role       = "${aws_iam_role.ecs_task.id}"
- policy_arn = "${aws_iam_policy.ecs_task.arn}"
+  role       = aws_iam_role.ecs_task.id
+  policy_arn = aws_iam_policy.ecs_task.arn
 }
 

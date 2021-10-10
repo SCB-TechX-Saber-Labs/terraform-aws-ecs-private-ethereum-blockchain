@@ -1,5 +1,5 @@
 locals {
-  ethereum_explorer_container_name          = "ethereum-explorer"
+  ethereum_explorer_container_name = "ethereum-explorer"
 
   ethereum_explorer_common_container_definitions = [
     local.ethereum_explorer_container_definition

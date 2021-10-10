@@ -1,7 +1,7 @@
 locals {
   service_name_fmt = "node-%0${min(length(format("%d", var.number_of_nodes)), length(format("%s", var.number_of_nodes))) + 1}d-%s"
-  ecs_cluster_name = "ethereum-network-${var.network_name}"  
-  ethereum_bucket    = "${var.region}-ecs-${lower(var.network_name)}-${random_id.bucket_postfix.hex}"
+  ecs_cluster_name = "ethereum-network-${var.network_name}"
+  ethereum_bucket  = "${var.region}-ecs-${lower(var.network_name)}-${random_id.bucket_postfix.hex}"
 }
 
 resource "aws_ecs_cluster" "ethereum" {

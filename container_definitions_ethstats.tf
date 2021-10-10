@@ -1,5 +1,5 @@
 locals {
-  ethstats_container_name          = "ethstats"
+  ethstats_container_name = "ethstats"
 
   ethstats_common_container_definitions = [
     local.ethstats_container_definition
