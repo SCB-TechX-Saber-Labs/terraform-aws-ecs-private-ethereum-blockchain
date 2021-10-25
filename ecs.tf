@@ -20,7 +20,7 @@ resource "aws_ecs_task_definition" "ethstats" {
 }
 
 resource "aws_ecs_service" "ethstats" {
-  count = var.is_public_subnets ? 1 : 0
+  count           = var.is_public_subnets ? 1 : 0
   name            = "ethstats-${var.network_name}"
   cluster         = aws_ecs_cluster.ethereum.id
   task_definition = aws_ecs_task_definition.ethstats.arn
@@ -54,7 +54,7 @@ resource "aws_ecs_task_definition" "ethereum_explorer" {
 }
 
 resource "aws_ecs_service" "ethereum_explorer" {
-  count = var.is_public_subnets ? 1 : 0
+  count           = var.is_public_subnets ? 1 : 0
   name            = "ethereum-explorer-${var.network_name}"
   cluster         = aws_ecs_cluster.ethereum.id
   task_definition = aws_ecs_task_definition.ethereum_explorer.arn
